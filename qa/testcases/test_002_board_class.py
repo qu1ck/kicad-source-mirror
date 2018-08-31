@@ -128,6 +128,21 @@ class TestBoardClass(unittest.TestCase):
         # ensure we can get to the ID via the STD name too
         self.assertEqual(pcb.GetLayerID(B_CU), b_cu_id)
 
+    def test_module_3d_settings(self):
+        pcb = BOARD()
+        module = MODULE(pcb)
+        pcb.Add(module)
+        model = MODULE_3D_SETTINGS()
+        model.m_Filename = 'some-model.step'
+        model.m_Scale = MODULE_3D_SETTINGS_VECTOR3D()
+        model.m_Scale.x = 3
+        model.m_Scale.y = 4
+        module.Add3DModel(model)
+
+        self.assertEqual(module.Models()[0].m_Filename, 'some-model.step')
+        self.assertEqual(module.Models()[0].m_Scale.x, 3)
+        self.assertEqual(module.Models()[0].m_Scale.y, 4)
+
     #def test_interactive(self):
     # 	code.interact(local=locals())
 

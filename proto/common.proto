@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+message Coordinates2D {
+    int64 x = 1;
+    int64 y = 2;
+}
+
+message ColorRGBA {
+    int32 r = 1;
+    int32 g = 2;
+    int32 b = 3;
+    int32 a = 4;
+}

@@ -1005,6 +1005,7 @@ endif()
 #================================================
 
 # Binaries ( CMake targets )
+add_subdirectory( proto )
 add_subdirectory( bitmaps_png )
 add_subdirectory( libs )
 add_subdirectory( markdown2html )

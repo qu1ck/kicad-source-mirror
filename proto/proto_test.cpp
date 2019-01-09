@@ -1,7 +1,7 @@
 #include <iostream>
 #include <google/protobuf/text_format.h>
 
-#include "proto/symbol.pb.h"
+#include "symbol.pb.h"
 
 using namespace kicad::proto;
 

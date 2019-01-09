@@ -6,7 +6,8 @@ else(PROTOC_EXECUTABLE)
     message(FATAL_ERROR "Protobuf compiler executable not found")
 endif(PROTOC_EXECUTABLE)
 
-file(GLOB PROTO_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.proto")
+file(GLOB PROTO_FILES RELATIVE ${CMAKE_SOURCE_DIR} "*.proto")
+file(GLOB PROTO_FILES_RELATIVE RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.proto")
 string(REPLACE ";" " " PROTO_FILES_STR "${PROTO_FILES}")
 foreach(PROTO_FILE ${PROTO_FILES})
     string(REPLACE ".proto" ".pb.h" PROTO_FILE_H ${PROTO_FILE})
@@ -24,13 +25,18 @@ message(STATUS "Proto files srcs: ${PROTO_FILES_SRC}")
 add_custom_command(
         OUTPUT ${PROTO_FILES_SRC}
         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/cpp-gen
-        COMMAND ${PROTOC_EXECUTABLE} --cpp_out=${CMAKE_CURRENT_BINARY_DIR}/cpp-gen ${PROTO_FILES}
+        COMMAND ${PROTOC_EXECUTABLE}
+            --cpp_out=${CMAKE_CURRENT_BINARY_DIR}/cpp-gen
+            --proto_path=${CMAKE_SOURCE_DIR}
+            ${PROTO_FILES}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        DEPENDS ${PROTO_FILES}
+        DEPENDS ${PROTO_FILES_RELATIVE}
         COMMENT "Compiling protobuf definitions for ${PROTO_FILES_STR}"
 )
 
 add_library(proto STATIC ${PROTO_FILES_SRC})
+
+target_include_directories(proto PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/cpp-gen)
 
 add_executable(proto_test proto_test.cpp)
 

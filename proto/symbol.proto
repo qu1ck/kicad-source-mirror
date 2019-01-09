@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+import "proto/common.proto";
+
+package kicad.proto.symbol;
+
+
+message Part {
+    string name = 1;
+    string extends = 2;
+    bool power = 3;
+    string uuid = 4;
+    common.Coordinates2D anchor = 5;
+
+    message Property {
+        string name = 1;
+        string value = 2;
+        common.Coordinates2D at = 3;
+        int32 angle = 4;
+        common.TextFormatting formatting = 5;
+        bool visible = 6;
+    }
+
+    repeated Property properties = 6;
+}
+
+message Pin {
+    enum PinType {
+        UNSPECIFIED = 0;
+        INPUT = 1;
+        OUTPUT = 2;
+        BIDIRECTIONAL = 4;
+        TRISTATE = 5;
+        PASSIVE = 6;
+        POWER_IN = 7;
+        POWER_OUT = 8;
+        OPEN_COLLECTOR = 9;
+        OPEN_EMITTER = 10;
+        UNCONNECTED = 11;
+    }
+
+    PinType type = 1;
+
+    enum PinShape {
+        NONE = 0;
+        LINE = 1;
+        INVERTED = 2;
+        CLOCK = 3;
+        INVERTED_CLOCK = 4;
+        INPUT_LOW = 5;
+        CLOCK_LOW = 6;
+        FALLING_EDGE = 7;
+        NON_LOGIC = 8;
+    }
+
+    PinShape shape = 2;
+    common.Coordinates2D at = 3;
+    int32 angle = 4;
+    int32 length = 5;
+    common.FormattedText name = 6;
+    common.FormattedText number = 7;
+    bool visible = 8;
+
+    message Alternate {
+        string alt_name = 1;
+        PinType type = 2;
+        PinShape shape = 3;
+    }
+
+    repeated Alternate alternates = 9;
+
+    repeated string pin_merges = 10;
+
+    repeated string pin_swap_hints = 11;
+}
+
+message Symbol {
+    repeated Part parts = 1;
+    repeated common.Shape shapes = 2;
+    repeated common.FormattedText texts = 3;
+    repeated Pin pins = 4;
+}

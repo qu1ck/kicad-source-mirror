@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package kicad.proto.common;
+
 message Coordinates2D {
     int64 x = 1;
     int64 y = 2;
@@ -10,4 +12,81 @@ message ColorRGBA {
     int32 g = 2;
     int32 b = 3;
     int32 a = 4;
+}
+
+message TextFormatting {
+    string font = 1;
+    int32 height = 2;
+    int32 width = 3;
+    bool italic = 4;
+    bool bold = 5;
+    bool mirror = 6;
+    ColorRGBA color = 7;
+    enum HorizontalJustification {
+        HJ_CENTER = 0;
+        HJ_LEFT = 1;
+        HJ_RIGHT = 2;
+    }
+    enum VerticalJustification {
+        VJ_CENTER = 0;
+        VJ_BOTTOM = 1;
+        VJ_TOP = 2;
+    }
+    HorizontalJustification horizontal_justification = 8;
+    VerticalJustification vertical_justification = 9;
+}
+
+message Fill {
+    enum FillType {
+        NO_FILL = 0;
+        FILLED = 1;
+        TRANSPARENT = 2;
+    }
+    FillType fill_type = 1;
+    ColorRGBA color = 2;
+}
+
+enum LineType {
+    SOLID = 0;
+    DOTTED = 1;
+}
+
+message Line {
+    repeated Coordinates2D points = 1;
+}
+
+message Arc {
+    Coordinates2D start = 1;
+    Coordinates2D end = 2;
+    int32 radius = 3;
+}
+
+message Bezier {
+    repeated Coordinates2D points = 1;
+}
+
+message Circle {
+    Coordinates2D center = 1;
+    int32 radius = 2;
+}
+
+message Shape {
+    Fill fill = 1;
+    int64 width = 2;
+    LineType line_type = 3;
+    ColorRGBA color = 4;
+
+    oneof shape_oneof {
+        Line line = 5;
+        Arc arc = 6;
+        Bezier bezier = 7;
+        Circle circle = 8;
+    }
+}
+
+message FormattedText {
+    string text = 1;
+    common.Coordinates2D at = 2;
+    int32 angle = 3;
+    TextFormatting formatting = 4;
 }
